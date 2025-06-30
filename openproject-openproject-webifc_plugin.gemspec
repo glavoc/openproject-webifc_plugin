@@ -4,7 +4,7 @@ $:.push File.expand_path("../../lib", __dir__)
 require "open_project/openproject_webifc_plugin/version"
 
 Gem::Specification.new do |s|
-  s.name        = "openproject-openproject-webifc_plugin"
+  s.name        = "openproject-webifc_plugin"
   s.version     = OpenProject::OpenprojectWebifcPlugin::VERSION
 
   s.authors     = "OpenProject GmbH"
