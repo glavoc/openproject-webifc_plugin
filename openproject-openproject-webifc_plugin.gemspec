@@ -1,12 +1,12 @@
 $:.push File.expand_path("../lib", __FILE__)
 $:.push File.expand_path("../../lib", __dir__)
 
-require "open_project/openproject-webifc_plugin/version"
+require "open_project/openproject_webifc_plugin/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
   s.name        = "openproject-openproject-webifc_plugin"
-  s.version     = OpenProject::Openproject-webifcPlugin::VERSION
+  s.version     = OpenProject::OpenprojectWebIFCPlugin::VERSION
 
   s.authors     = "OpenProject GmbH"
   s.email       = "info@openproject.org"
