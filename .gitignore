@@ -1,0 +1,79 @@
+# =====================
+# Ruby / Rails ignores
+# =====================
+
+*.gem
+*.rbc
+.bundle
+vendor/bundle
+log/*
+tmp/*
+!.keep
+db/*.sqlite3
+db/*.sqlite3-journal
+public/system
+public/uploads
+.byebug_history
+coverage/
+.rspec
+spec/examples.txt
+test/tmp
+test/version_tmp
+tmp/**/*
+node_modules/   
+frontend/node_modules/
+.yardoc
+.bundle
+.bundle-cache
+
+# =====================
+# Node / Angular ignores
+# =====================
+
+node_modules/
+jspm_packages/
+dist/
+out-tsc/
+build/
+release/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Angular specific
+.angular/cache/
+.angular/cli.json
+
+# Environment files
+.env
+.env.*.local
+
+# Misc
+coverage/
+
+# =====================
+# Editor temp files
+# =====================
+
+*~
+*.swp
+*.swo
+
+# =====================
+# Plugin-specific
+# =====================
+
+vendor/gems/
+vendor/cache/
