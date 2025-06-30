@@ -1,5 +1,5 @@
 module OpenProject
-  module Openproject-webifcPlugin
+  module OpenprojectWebifcPlugin
     VERSION = "0.0.1"
   end
 end
