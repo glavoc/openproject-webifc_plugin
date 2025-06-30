@@ -1,4 +1,5 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Components } from '@thatopen/components';
 
 @Component({
   selector: 'webifc-viewer',
@@ -6,15 +7,22 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
   styleUrls: ['./webifc-viewer.component.scss']
 })
 export class WebifcViewerComponent implements OnInit {
+  @ViewChild('viewerContainer', { static: true }) containerRef!: ElementRef<HTMLDivElement>;
 
-  @ViewChild('viewerContainer', { static: true }) viewerContainer!: ElementRef<HTMLDivElement>;
+  async ngOnInit() {
+    const container = this.containerRef.nativeElement;
 
-  constructor() {}
+    const components = new Components();
 
-  ngOnInit(): void {
-    // For now, just add a placeholder or basic viewer init here.
-    this.viewerContainer.nativeElement.innerHTML = '<p>ThatOpen IFC Viewer will load here.</p>';
+    // @ts-ignore: not typed in v2
+    container.appendChild(components.renderer.domElement);
 
-    // TODO: Integrate engine_web-ifc viewer here.
+    await components.init();
+
+    // @ts-ignore: not typed in v2
+    await components.ifc.loader.setup();
+
+    // @ts-ignore: not typed in v2
+    await components.ifc.loader.loadIfcUrl('/ifc/test.ifc');
   }
 }

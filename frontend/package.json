@@ -1,23 +1,26 @@
 {
-  "name": "openproject-webifc-plugin-frontend",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "build": "ng build --prod",
-    "start": "ng serve"
-  },
-  "dependencies": {
-    "@angular/common": "^15.0.0",
-    "@angular/core": "^15.0.0",
-    "@angular/forms": "^15.0.0",
-    "@angular/platform-browser": "^15.0.0",
-    "@angular/platform-browser-dynamic": "^15.0.0",
-    "rxjs": "^7.5.0",
-    "zone.js": "^0.12.0"
-  },
-  "devDependencies": {
-    "@angular/cli": "^15.0.0",
-    "@angular/compiler-cli": "^15.0.0",
-    "typescript": "~4.9.5"
-  }
+    "name": "openproject-webifc-plugin-frontend",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "build": "ng build --prod",
+        "start": "ng serve"
+    },
+    "dependencies": {
+        "@angular/common": "^15.0.0",
+        "@angular/core": "^15.0.0",
+        "@angular/forms": "^15.0.0",
+        "@angular/platform-browser": "^15.0.0",
+        "@angular/platform-browser-dynamic": "^15.0.0",
+        "rxjs": "^7.5.0",
+        "zone.js": "^0.12.0",
+        "web-ifc": "^0.0.68",
+        "@thatopen/fragments": "^3.0.9",
+        "@thatopen/components": "^2.4.11"
+    },
+    "devDependencies": {
+        "@angular/cli": "^15.0.0",
+        "@angular/compiler-cli": "^15.0.0",
+        "typescript": "~4.9.5"
+    }
 }
