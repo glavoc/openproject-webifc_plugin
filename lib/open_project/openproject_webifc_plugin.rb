@@ -1,4 +1,4 @@
-require "open_project/openproject-webifc_plugin/engine"
+require "open_project/openproject_webifc_plugin/engine"
 
 module OpenProject
   module Openproject-webifcPlugin
