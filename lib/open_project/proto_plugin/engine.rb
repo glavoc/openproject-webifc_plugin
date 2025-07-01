@@ -3,15 +3,15 @@
 require 'active_support/dependencies'
 require 'open_project/plugins'
 
-module OpenProject::ProtoPlugin
+module OpenProject::WEBiFCPlugin
   class Engine < ::Rails::Engine
     engine_name :openproject_proto_plugin
 
     include OpenProject::Plugins::ActsAsOpEngine
 
     register(
-      'openproject-proto_plugin',
-      :author_url => 'https://openproject.org',
+      'openproject-webifc_plugin',
+      :author_url => 'https://buildbimopb.com',
       :requires_openproject => '>= 13.1.0'
     ) do
       # We define a new project module here for our controller including a permission.
