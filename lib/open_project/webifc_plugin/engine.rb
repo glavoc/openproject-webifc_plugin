@@ -1,8 +1,11 @@
-# lib/open_project/webifc_plugin/engine.rb
+# frozen_string_literal: true
+
 require 'open_project/plugins'
 
 module OpenProject
   module WEBiFCPlugin
+    # The OpenProject::WEBiFCPlugin::Engine class is the main entry point for the plugin.
+    # It registers the plugin with OpenProject and sets up the necessary configurations.
     class Engine < ::Rails::Engine
       engine_name :openproject_webifc_plugin
 
@@ -12,7 +15,6 @@ module OpenProject
                author: 'BuildBIM',
                homepage: 'https://buildbimopb.com',
                version: OpenProject::WEBiFCPlugin::VERSION do
-
         menu_item :web_ifc_viewer,
                   { controller: '/web_ifc/viewer', action: :index },
                   caption: 'IFC Viewer',

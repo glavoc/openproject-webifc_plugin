@@ -38,7 +38,7 @@ RSpec.describe KittensController, type: :controller do
     login_as user
   end
 
-  describe "index" do
+  describe 'index' do
     before do
       get :index, params: { project_id: project.id }
     end

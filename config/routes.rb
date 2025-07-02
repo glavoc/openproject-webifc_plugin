@@ -1,12 +1,14 @@
-Rails.application.routes.draw do
-  scope '', as: 'kitten_plugin' do
-    scope 'projects/:project_id', as: 'project' do
-      resources :kittens
-    end
-  end
+# description: Routes for the OpenProject WebIfc plugin
 
-  # Create a route that is handled completely in the frontend
-  # with a helper controller that just renders a plain page for the frontend
-  # to hook into with its own route
-  get '/angular_kittens', to: 'angular#empty_layout'
+# frozen_string_literal: true
+
+# This file is part of OpenProject.
+# It is subject to the license terms in the LICENSE file found in the top-level directory of this distribution.
+# No part of OpenProject, including this file, may be copied, modified, propagated, or distributed except according to
+# the terms contained in the LICENSE file.
+
+require 'open_project/webifc_plugin/engine'
+OpenProject::WebifcPlugin::Engine.routes.draw do
+  # Viewer route with optional project context
+  get '/viewer', to: 'web_ifc/viewer#index', as: 'web_ifc_viewer'
 end
