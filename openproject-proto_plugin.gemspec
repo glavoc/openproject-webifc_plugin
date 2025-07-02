@@ -4,16 +4,16 @@ $:.push File.expand_path("../lib", __FILE__)
 require 'open_project/webifc_plugin/version'
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = "openproject-webifc_plugin"
+  s.name        = 'openproject-webifc_plugin'
   s.version     = OpenProject::WEBiFCPlugin::VERSION
-  s.authors     = "BuildBIM"
-  s.email       = "luka@buildbim.co.nz"
-  s.homepage    = "https://buildbimopb.com" 
+  s.authors     = 'BuildBIM'
+  s.email       = 'luka@buildbim.co.nz'
+  s.homepage    = 'https://buildbimopb.com' 
   s.summary     = 'OpenProject Web IFC Viewer Plugin'
-  s.description = "A prototypical OpenProject plugin"
-  s.license     = "GPLv3"
+  s.description = 'A prototypical OpenProject plugin'
+  s.license     = 'GPLv3'
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + %w(CHANGELOG.md README.md)
+  s.files = Dir['{app,config,db,lib}/**/*'] + %w(CHANGELOG.md README.md)
 
   s.add_dependency 'rails', '>= 7.0', '< 9.0'
 end
