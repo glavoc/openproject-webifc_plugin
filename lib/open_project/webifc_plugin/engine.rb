@@ -57,14 +57,6 @@ module OpenProject::WEBiFCPlugin
     end
 
     config.after_initialize do
-      OpenProject::Static::Homescreen.manage :blocks do |blocks|
-        blocks.push(
-          { partial: 'homescreen_block', if: proc { true } }
-        )
-      end
-    end
-
-    config.after_initialize do
       OpenProject::Notifications.subscribe 'user_invited' do |token|
         user = token.user
 
