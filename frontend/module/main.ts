@@ -1,16 +1,33 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, Injector, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WebIfcViewerModule } from './webifc-viewer/webifc-viewer.module';
+import { registerCustomElement } from 'core-app/shared/helpers/angular/custom-elements.helper';
+import { WebIfcViewerComponent } from './webifc-viewer/webifc-viewer.component';
+
+export function initializeWebIfcPlugin(injector: Injector) {
+  return () => {
+    // Optional: initialize plugin-specific hooks here if needed
+    // e.g. register services, global listeners, etc.
+  };
+}
 
 @NgModule({
   imports: [
     CommonModule,
-    WebIfcViewerModule
-  ]
+  ],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeWebIfcPlugin,
+      deps: [Injector],
+      multi: true,
+    },
+  ],
+  declarations: [
+    WebIfcViewerComponent,
+  ],
 })
-export class OpenprojectWebifcPluginModule {}
-
-export default {
-  selector: 'op-web-ifc-viewer',
-  module: OpenprojectWebifcPluginModule
-};
+export class PluginModule {
+  constructor(injector: Injector) {
+    registerCustomElement('op-web-ifc-viewer', WebIfcViewerComponent, { injector });
+  }
+}
