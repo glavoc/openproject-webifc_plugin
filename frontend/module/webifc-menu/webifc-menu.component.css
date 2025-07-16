@@ -1,0 +1,8 @@
+.webifc-menu-container {
+  padding: 1rem;
+  border: 1px dashed #aaa;
+}
+.menu-content-placeholder {
+  margin-top: 1rem;
+  color: #888;
+}

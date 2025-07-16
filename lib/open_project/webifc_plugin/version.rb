@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 module OpenProject
-  module WEBiFCPlugin
+  module WebIfcPlugin
     VERSION = '0.0.1'
   end
 end

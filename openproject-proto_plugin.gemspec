@@ -5,7 +5,7 @@ require 'open_project/webifc_plugin/version'
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
   s.name        = 'openproject-webifc_plugin'
-  s.version     = OpenProject::WEBiFCPlugin::VERSION
+  s.version     = OpenProject::WebIfcPlugin::VERSION
   s.authors     = 'BuildBIM'
   s.email       = 'luka@buildbim.co.nz'
   s.homepage    = 'https://buildbimopb.com' 

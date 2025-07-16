@@ -2,6 +2,7 @@ import { APP_INITIALIZER, Injector, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { registerCustomElement } from 'core-app/shared/helpers/angular/custom-elements.helper';
 import { WebIfcViewerComponent } from './webifc-viewer/webifc-viewer.component';
+import { WebIfcMenuComponent } from './webifc-menu/webifc-menu.component';
 
 export function initializeWebIfcPlugin(injector: Injector) {
   return () => {
@@ -24,10 +25,13 @@ export function initializeWebIfcPlugin(injector: Injector) {
   ],
   declarations: [
     WebIfcViewerComponent,
+    WebIfcMenuComponent,
   ],
 })
 export class PluginModule {
   constructor(injector: Injector) {
     registerCustomElement('op-web-ifc-viewer', WebIfcViewerComponent, { injector });
+    registerCustomElement('webifc-menu', WebIfcMenuComponent, { injector });
   }
 }
+ 

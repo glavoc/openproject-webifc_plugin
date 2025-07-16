@@ -1,3 +1,9 @@
 <%= "Hello from IFC viewer" %>
 <%# This is a simple view file for the IFC viewer. %>
+<% content_for :header_tags do %>
+  <%= include_gon %> 
+  <% provision_gon_for_ifc_model(@ifc_models, @shown_model_ids) %>
+<% end %>
+
+
 <op-web-ifc-viewer></op-web-ifc-viewer>
