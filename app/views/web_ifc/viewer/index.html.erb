@@ -1,9 +1,33 @@
-<%= "Hello from IFC viewer" %>
-<%# This is a simple view file for the IFC viewer. %>
 <% content_for :header_tags do %>
   <%= include_gon %> 
   <% provision_gon_for_ifc_model(@ifc_models, @shown_model_ids) %>
 <% end %>
 
+<div class="viewer-with-bcf">
+  <!-- WebIFC Viewer -->
+  <div class="webifc-viewer">
+    <op-web-ifc-viewer></op-web-ifc-viewer>
+  </div>
 
-<op-web-ifc-viewer></op-web-ifc-viewer>
+  <!-- Inject OpenProject BCF content-right -->
+  <div class="bcf-content-right">
+    <div ui-view="content-right"></div>
+  </div>
+</div>
+
+<style>
+.viewer-with-bcf {
+  display: flex;
+  height: 100%;
+}
+
+.webifc-viewer {
+  flex: 2;
+}
+
+.bcf-content-right {
+  flex: 1;
+  border-left: 1px solid #ddd;
+  overflow-y: auto;
+}
+</style>
