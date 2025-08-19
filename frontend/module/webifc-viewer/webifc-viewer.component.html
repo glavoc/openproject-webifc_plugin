@@ -1,16 +1,6 @@
-<div #container style="width: 100%; height: 100vh; position: relative;">
-  <!-- This div will host the canvas -->
+<div>Test text: IFC viewer component is working!</div>
+<div class="viewer-with-bcf">
+  <div class="webifc-viewer">
+    <op-web-ifc-viewer></op-web-ifc-viewer>
+  </div>
 </div>
-
-<!-- IFC UI Panel -->
-<bim-panel label="IFC Loader" class="options-menu" active
-           style="position: absolute; top: 20px; left: 20px; z-index: 1000;">
-  <bim-panel-section collapsed label="Controls">
-    <bim-panel-section style="padding-top: 12px;">
-      <bim-button label="Load IFC" (click)="loadIfc()"></bim-button>
-      <bim-button label="Dispose" (click)="disposeFragments()"></bim-button>
-    </bim-panel-section>
-  </bim-panel-section>
-</bim-panel>
-<button style="position: absolute; top: 10px; right: 10px; z-index: 9999;" (click)="loadIfc()">DEBUG LOAD IFC</button>
-

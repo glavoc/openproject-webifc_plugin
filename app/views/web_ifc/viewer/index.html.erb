@@ -4,16 +4,15 @@
 <% end %>
 
 <div class="viewer-with-bcf">
-  <!-- WebIFC Viewer -->
   <div class="webifc-viewer">
     <op-web-ifc-viewer></op-web-ifc-viewer>
   </div>
 
-  <!-- Inject OpenProject BCF content-right -->
   <div class="bcf-content-right">
-    <div ui-view="content-right"></div>
+    <ui-view name="content-right"></ui-view>
   </div>
 </div>
+
 
 <style>
 .viewer-with-bcf {

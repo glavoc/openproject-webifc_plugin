@@ -1,4 +1,5 @@
 import { APP_INITIALIZER, Injector, NgModule } from '@angular/core';
+import { UIRouterModule } from '@uirouter/angular';
 import { CommonModule } from '@angular/common';
 import { registerCustomElement } from 'core-app/shared/helpers/angular/custom-elements.helper';
 import { WebIfcViewerComponent } from './webifc-viewer/webifc-viewer.component';
@@ -13,7 +14,7 @@ export function initializeWebIfcPlugin(injector: Injector) {
 
 @NgModule({
   imports: [
-    CommonModule,
+    CommonModule
   ],
   providers: [
     {

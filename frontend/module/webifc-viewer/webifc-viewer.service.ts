@@ -5,6 +5,9 @@ import * as WEBIFC from "web-ifc";
 import { Manager } from "@thatopen/ui";
 import { PathHelperService } from "core-app/core/path-helper/path-helper.service";
 import { CurrentProjectService } from "core-app/core/current-project/current-project.service";
+import { IfcProjectDefinition } from 'core-app/features/bim/ifc_models/pages/viewer/ifc-models-data.service';
+import { WebIfcServerService } from "../webifc-server/webifc-server.service";
+
 
 @Injectable({ providedIn: "root" })
 export class WebIfcViewerService {
@@ -19,7 +22,8 @@ export class WebIfcViewerService {
   /**
    * Initializes the WebIFC viewer and loads the first model of the given project.
    */
-  async initViewer(container: HTMLDivElement, projectId: string): Promise<void> {
+  async initViewer(container: HTMLDivElement, projects:IfcProjectDefinition[]): Promise<void> {
+   
     Manager.init();
     this.components = new OBC.Components();
 
@@ -33,6 +37,8 @@ export class WebIfcViewerService {
     const fragments = this.components.get(OBC.FragmentsManager);
 
     this.fragmentIfcLoader.settings.autoSetWasm = false;
+
+    // TODO: web assembly not supported in OP, implement a fallback
     this.fragmentIfcLoader.settings.wasm = {
       path: "/wasm/",
       absolute: true,
@@ -75,5 +81,4 @@ export class WebIfcViewerService {
       console.error(`Error loading IFC model:`, error);
     }
   }
-
 }

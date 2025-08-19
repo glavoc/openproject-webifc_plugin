@@ -62,8 +62,14 @@ export class WebIfcServerService {
   /**
    * (Optional) Get raw URL to load a model file directly.
    */
-  getIfcFileUrl(model: { id: number; ifc_attachment_url: string }): string {
-    return model.ifc_attachment_url;
+  getIfcFileUrl(mprojectId:string, modelId:number, done:Function, error:Function){
+    const attachmentId = this.ifcModels.xkt_attachment_ids[modelId];
+    if (!attachmentId) {
+      error(`Unknown attachment ID for model ${modelId}`);
+      return;
+    }
+
+    done(this.pathHelper.attachmentContentPath(attachmentId));
   }
 
   // No `getGeometry()` needed – WebIFC loads .ifc directly

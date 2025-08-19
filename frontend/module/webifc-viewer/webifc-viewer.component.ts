@@ -1,54 +1,69 @@
-// webifc-viewer.component.ts
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, OnDestroy, OnInit, ViewChild, Component, ElementRef } from '@angular/core';
+import { BehaviorSubject, Subject, combineLatest } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 import { WebIfcViewerService } from './webifc-viewer.service';
-import { WebIfcServerService } from '../webifc-server/webifc-server.service';
+import { I18nService } from 'core-app/core/i18n/i18n.service';
+import { CurrentUserService } from 'core-app/core/current-user/current-user.service';
 import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
+import { IfcModelsDataService } from 'core-app/features/bim/ifc_models/pages/viewer/ifc-models-data.service';
 
 
 @Component({
-  selector: 'app-webifc-viewer',
-  template: `<div #container style="width: 100%; height: 100vh;"></div>`,
-  styles: []
+  selector: 'op-web-ifc-viewer',
+  templateUrl: './webifc-viewer.component.html',
 })
-export class WebIfcViewerComponent implements OnInit {
-  @ViewChild('container', { static: true }) container!: ElementRef<HTMLDivElement>;
+export class WebIfcViewerComponent implements OnInit, OnDestroy, AfterViewInit {
+  private viewInitialized$ = new Subject<void>();
 
-  constructor(
-    private webIfcViewerService: WebIfcViewerService,
-    private webIfcServerService: WebIfcServerService,
-    private currentProjectService: CurrentProjectService
-  ) {}
+  modelCount:number = this.ifcData.models.length;
 
-  async ngOnInit() {
-    const currentProjectId = this.currentProjectService.identifier as string;
+  canManage = this.ifcData.allowed('manage_ifc_models');
 
-    // Step 1: Init viewer
-    await this.webIfcViewerService.initViewer(this.container.nativeElement, currentProjectId);
+  @ViewChild('modelCanvas') modelCanvas:ElementRef;
+  
 
-    // Step 2: Init models from gon
-    this.webIfcServerService.initFromGon();
+  constructor (
+        public ifcData:IfcModelsDataService,
+        private I18n:I18nService,
+        private webIfcViewerService:WebIfcViewerService,
+        private currentUserService:CurrentUserService,
+        private currentProjectService:CurrentProjectService,
+  ){}
 
-    // Step 3: Get model list for this project
-    let models: Array<{ id: number; title: string; url: string; visible?: boolean }> = [];
 
-    await new Promise<void>((resolve, reject) => {
-      this.webIfcServerService.getProject(
-        currentProjectId,
-        (project: any) => {
-          models = project.models || [];
-          resolve();
-        },
-        () => reject('Failed to load project')
-      );
-    });
-
-    // Step 4: Load each visible model
-    for (const model of models) {
-      if (model.visible && model.url) {
-        await this.webIfcViewerService.loadModel(model.url, model.title);
-      }
+  ngOnInit():void {
+    if (this.modelCount === 0) {
+      return;
     }
+      
+    combineLatest([
+      this
+        .currentUserService
+        .hasCapabilities$(
+          [
+            'ifc_models/create',
+            'ifc_models/update',
+            'ifc_models/destroy',
+          ],
+          this.currentProjectService.id as string,
+        ),
+      this.viewInitialized$,
+    ])
+      .pipe(take(1))
+      .subscribe(([manageIfcModelsAllowed]) => {
+        this.webIfcViewerService.initViewer(
+          this.modelCanvas.nativeElement as HTMLDivElement,
+          this.ifcData.projects
+        );
+      });
+    }
+  
+  ngAfterViewInit():void {
+    this.viewInitialized$.next();
   }
 
+  ngOnDestroy():void {
+   // this.webIfcViewerService.destroy();
+  }
 
 }
