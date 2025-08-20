@@ -23,7 +23,8 @@ export class WebIfcViewerService {
   /**
    * Initializes the WebIFC viewer and loads the first model of the given project.
    */
-  async initViewer(container: HTMLDivElement, projects:IfcProjectDefinition[]): Promise<void> {
+
+  async initViewer(container: HTMLDivElement): Promise<void> {
    
     Manager.init();
     this.components = new OBC.Components();
@@ -62,15 +63,27 @@ export class WebIfcViewerService {
     }
     this.fragmentIfcLoader.settings.webIfc.COORDINATE_TO_ORIGIN = true;
 
-    const fileUrl = this.webIfcServer.getIfcFileUrl(projects[0].name, 4);
-    if (fileUrl) {
-      await this.loadModel(fileUrl, `Model-${4}`);
+    this.currentProjectService.name;
+    const projectId = this.currentProjectService.identifier ?? "";
+    const attachmentIdsObj = this.webIfcServer.ifcModels.ifc_attachment_ids || {};
+
+    // get values and convert to numbers
+    const attachmentIds = Object.values(attachmentIdsObj)
+      .filter(id => id != null)        // remove null/undefined
+      .map(id => Number(id));          // convert to number
+
+    for (const id of attachmentIds) {
+      const fileUrl = this.webIfcServer.getIfcFileUrl(projectId, id);
+      if (fileUrl) {
+        await this.loadModel(fileUrl, `Model-${id}`);
+      }
     }
   }
 
   async loadModel(fileUrl: string, modelName?: string): Promise<void> {
     try {
-      const response = await fetch(fileUrl, { credentials: 'include' });
+      const tempfileurl = 'http://localhost:3000' + fileUrl
+      const response = await fetch(tempfileurl, { credentials: 'include' });
       if (!response.ok) {
         throw new Error(`Failed to fetch IFC file from ${fileUrl}`);
       }
