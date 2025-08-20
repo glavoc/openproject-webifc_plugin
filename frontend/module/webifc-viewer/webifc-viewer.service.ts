@@ -18,6 +18,7 @@ export class WebIfcViewerService {
   constructor(
     private pathHelper: PathHelperService,
     private currentProjectService: CurrentProjectService,
+    private webIfcServer: WebIfcServerService
   ) {}
   /**
    * Initializes the WebIFC viewer and loads the first model of the given project.
@@ -61,6 +62,10 @@ export class WebIfcViewerService {
     }
     this.fragmentIfcLoader.settings.webIfc.COORDINATE_TO_ORIGIN = true;
 
+    const fileUrl = this.webIfcServer.getIfcFileUrl(projects[0].name, 4);
+    if (fileUrl) {
+      await this.loadModel(fileUrl, `Model-${4}`);
+    }
   }
 
   async loadModel(fileUrl: string, modelName?: string): Promise<void> {

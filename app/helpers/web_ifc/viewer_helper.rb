@@ -1,0 +1,45 @@
+module WebIfc::ViewerHelper
+
+  def provision_gon_for_webifc_model(all_models, shown_models)
+    gon.ifc_models = {
+      models: gon_webifc_model_models(all_models),
+      shown_models: gon_webifc_shown_models(all_models, shown_models),
+      projects: [{ id: @project.identifier, name: @project.name }],
+      ifc_attachment_ids: gon_webifc_model_ifc_attachment_ids(all_models),
+      permissions: {
+        manage_ifc_models: User.current.allowed_in_project?(:manage_ifc_models, @project),
+        manage_bcf: User.current.allowed_in_project?(:manage_bcf, @project)
+      }
+    }
+  end
+
+  def converted_webifc_models(ifc_models)
+    ifc_models.select(&:converted?)
+  end
+
+  def gon_webifc_model_models(all_models)
+    all_converted_models = converted_webifc_models(all_models)
+
+    all_converted_models.map do |ifc_model|
+      {
+        id: ifc_model.id,
+        name: ifc_model.title,
+        default: ifc_model.is_default
+      }
+    end
+  end
+
+  def gon_webifc_model_ifc_attachment_ids(models)
+    models.map { |model| [model.id, model.ifc_attachment&.id] }.to_h
+  end
+
+  def gon_webifc_shown_models(all_models, shown_models)
+    if shown_models.empty?
+      return all_models.select(&:is_default).map(&:id)
+    end
+
+    converted_webifc_models(all_models)
+      .select { |model| shown_models.include?(model.id) }
+      .map(&:id)
+  end
+end

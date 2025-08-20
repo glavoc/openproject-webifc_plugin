@@ -1,32 +1,9 @@
 <% content_for :header_tags do %>
   <%= include_gon %> 
-  <% provision_gon_for_ifc_model(@ifc_models, @shown_model_ids) %>
+  <% provision_gon_for_webifc_model(@ifc_models, @shown_model_ids) %>
 <% end %>
 
-<div class="viewer-with-bcf">
-  <div class="webifc-viewer">
-    <op-web-ifc-viewer></op-web-ifc-viewer>
-  </div>
 
-  <div class="bcf-content-right">
-    <ui-view name="content-right"></ui-view>
-  </div>
-</div>
+<op-web-ifc-viewer></op-web-ifc-viewer>
 
 
-<style>
-.viewer-with-bcf {
-  display: flex;
-  height: 100%;
-}
-
-.webifc-viewer {
-  flex: 2;
-}
-
-.bcf-content-right {
-  flex: 1;
-  border-left: 1px solid #ddd;
-  overflow-y: auto;
-}
-</style>

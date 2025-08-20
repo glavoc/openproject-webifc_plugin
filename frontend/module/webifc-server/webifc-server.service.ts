@@ -1,11 +1,10 @@
 // webifc-server.service.ts
 import { Injectable } from '@angular/core';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
-import { IFCGonDefinition } from '../../../../bim/ifc_models/pages/viewer/ifc-models-data.service';
 
 @Injectable({ providedIn: 'root' })
 export class WebIfcServerService {
-  private ifcModels!: IFCGonDefinition;
+  public ifcModels: any;
 
   constructor(private pathHelper: PathHelperService) {
     const gon = (window as any).gon?.ifc_models;
@@ -24,53 +23,33 @@ export class WebIfcServerService {
       throw new Error("gon.ifc_models.models is missing or invalid.");
     }
 
-    this.ifcModels = gon;
   }
 
   /**
    * Gets a list of projects from gon.
    */
   getProjects(done: Function, _error: Function) {
-    done({ projects: this.ifcModels.projects });
   }
 
   /**
    * Gets a project and its models.
    */
   getProject(projectId: string, done: (json: unknown) => void, _error: () => void) {
-    const projectDefinition = this.ifcModels.projects.find((p: any) => p.id === projectId);
-    if (!projectDefinition) {
-      throw new Error(`Unknown project ID: '${projectId}'`);
-    }
-
-    const shownIds = this.ifcModels.shown_models;
-
-    const manifestData = {
-      id: projectDefinition.id,
-      name: projectDefinition.name,
-      models: this.ifcModels.models.map((model: any) => ({
-        id: model.id,
-        title: model.title,
-        url: model.ifc_attachment_url,
-        visible: shownIds.includes(model.id),
-      })),
-    };
-
-    done(manifestData);
   }
 
   /**
    * (Optional) Get raw URL to load a model file directly.
    */
-  getIfcFileUrl(mprojectId:string, modelId:number, done:Function, error:Function){
-    const attachmentId = this.ifcModels.xkt_attachment_ids[modelId];
+  getIfcFileUrl(projectId:string, modelId:number){
+    const attachmentId = this.ifcModels.ifc_attachment_ids[modelId];
     if (!attachmentId) {
-      error(`Unknown attachment ID for model ${modelId}`);
+      console.error(`Unknown attachment ID for model ${modelId}`);
       return;
     }
 
-    done(this.pathHelper.attachmentContentPath(attachmentId));
+    return this.pathHelper.attachmentContentPath(attachmentId);
   }
+
 
   // No `getGeometry()` needed – WebIFC loads .ifc directly
 }
