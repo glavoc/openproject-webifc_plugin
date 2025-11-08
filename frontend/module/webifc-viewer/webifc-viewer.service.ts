@@ -147,17 +147,22 @@ export class WebIfcViewerService {
    * Creates the UI layout with panels and toolbars
    */
   private createUI(container: HTMLElement): void {
+    const highlighter = this.components.get(OBF.Highlighter);
+    const hider = this.components.get(OBC.Hider);
+    const fragments = this.components.get(OBC.FragmentsManager);
+
+    // Camera controls toolbar section
+    const cameraSection = this.createCameraSection();
+    
+    // Selection controls toolbar section
+    const selectionSection = this.createSelectionSection(highlighter, hider, fragments);
+
     // Create toolbar for viewport
     const toolbar = BUI.Component.create(() => {
       return BUI.html`
         <bim-toolbar>
-          <bim-toolbar-section label="Camera">
-            <bim-button 
-              label="Fit" 
-              icon="material-symbols:fit-screen"
-              @click=${() => this.world.camera.fit(this.world.meshes, 0.8)}>
-            </bim-button>
-          </bim-toolbar-section>
+          ${cameraSection}
+          ${selectionSection}
         </bim-toolbar>
       `;
     });
@@ -200,6 +205,158 @@ export class WebIfcViewerService {
 
     // Append to container
     container.appendChild(this.appGrid);
+  }
+
+  /**
+   * Creates camera control toolbar section
+   */
+  private createCameraSection(): BUI.PanelSection {
+    const camera = this.world.camera;
+
+    const onFitModel = () => {
+      if (camera instanceof OBC.OrthoPerspectiveCamera && this.world.meshes.size > 0) {
+        camera.fit(this.world.meshes, 0.8);
+      }
+    };
+
+    const onLock = (e: Event) => {
+      const button = e.target as BUI.Button;
+      camera.enabled = !camera.enabled;
+      button.active = !camera.enabled;
+      button.label = camera.enabled ? "Disable" : "Enable";
+      button.icon = camera.enabled
+        ? "tabler:lock-filled"
+        : "majesticons:unlock-open";
+    };
+
+    return BUI.Component.create<BUI.PanelSection>(() => {
+      return BUI.html`
+        <bim-toolbar-section label="Camera" icon="ph:camera-fill">
+          <bim-button 
+            label="Fit Model" 
+            icon="material-symbols:fit-screen-rounded" 
+            @click=${onFitModel}>
+          </bim-button>
+          <bim-button 
+            label="Disable" 
+            icon="tabler:lock-filled" 
+            @click=${onLock} 
+            .active=${!camera.enabled}>
+          </bim-button>
+        </bim-toolbar-section>
+      `;
+    });
+  }
+
+  /**
+   * Creates selection control toolbar section
+   */
+  private createSelectionSection(
+    highlighter: OBF.Highlighter,
+    hider: OBC.Hider,
+    fragments: OBC.FragmentsManager
+  ): BUI.PanelSection {
+    const onToggleVisibility = () => {
+      const selection = highlighter.selection.select;
+      if (Object.keys(selection).length === 0) return;
+      
+      for (const fragmentID in selection) {
+        const fragment = fragments.list.get(fragmentID);
+        if (!fragment) continue;
+        const expressIDs = selection[fragmentID];
+        for (const id of expressIDs) {
+          const isHidden = fragment.hiddenItems.has(id);
+          if (isHidden) {
+            fragment.setVisibility(true, [id]);
+          } else {
+            fragment.setVisibility(false, [id]);
+          }
+        }
+      }
+    };
+
+    const onIsolate = () => {
+      const selection = highlighter.selection.select;
+      if (Object.keys(selection).length === 0) return;
+      
+      for (const [, fragment] of fragments.list) {
+        fragment.setVisibility(false);
+      }
+      hider.set(true, selection);
+    };
+
+    const onShowAll = () => {
+      for (const [, fragment] of fragments.list) {
+        fragment.setVisibility(true);
+      }
+    };
+
+    const onFocusSelection = async () => {
+      if (!this.world.camera.hasCameraControls()) return;
+
+      const bbox = this.components.get(OBC.BoundingBoxer);
+      bbox.reset();
+
+      const selected = highlighter.selection.select;
+      if (!Object.keys(selected).length) return;
+
+      for (const fragID in selected) {
+        const fragment = fragments.list.get(fragID);
+        if (!fragment) continue;
+        const ids = selected[fragID];
+        bbox.addMesh(fragment.mesh, ids);
+      }
+
+      const sphere = bbox.getSphere();
+      const { x, y, z } = sphere.center;
+      const i = Infinity;
+      const mi = -Infinity;
+      const isInf = sphere.radius === i || x === i || y === i || z === i;
+      const isMInf = sphere.radius === mi || x === mi || y === mi || z === mi;
+      const isZero = sphere.radius === 0;
+      
+      if (isInf || isMInf || isZero) {
+        return;
+      }
+
+      sphere.radius *= 1.2;
+      await this.world.camera.controls.fitToSphere(sphere, true);
+    };
+
+    return BUI.Component.create<BUI.PanelSection>(() => {
+      return BUI.html`
+        <bim-toolbar-section label="Selection" icon="ph:cursor-fill">
+          <bim-button 
+            @click=${onShowAll} 
+            label="Show All" 
+            icon="tabler:eye-filled" 
+            tooltip-title="Show All" 
+            tooltip-text="Shows all elements in all models.">
+          </bim-button>
+          <bim-button 
+            @click=${onToggleVisibility} 
+            label="Toggle Visibility" 
+            icon="tabler:square-toggle" 
+            tooltip-title="Toggle Visibility" 
+            tooltip-text="From the current selection, hides visible elements and shows hidden elements.">
+          </bim-button>
+          <bim-button 
+            @click=${onIsolate} 
+            label="Isolate" 
+            icon="prime:filter-fill" 
+            tooltip-title="Isolate" 
+            tooltip-text="Isolates the current selection.">
+          </bim-button>
+          <bim-button 
+            @click=${onFocusSelection} 
+            label="Focus" 
+            icon="ri:focus-mode" 
+            tooltip-title="Focus" 
+            tooltip-text="Focus the camera to the current selection.">
+          </bim-button>
+        </bim-toolbar-section>
+      `;
+    });
   }
 
   /**
