@@ -1,0 +1,34 @@
+/* WebIFC Viewer Component Styles */
+
+.webifc-viewer-container {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ensure BUI components have proper styling */
+.webifc-viewer-container bim-grid {
+  display: grid;
+  width: 100%;
+  height: 100%;
+}
+
+.webifc-viewer-container bim-viewport {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.webifc-viewer-container bim-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--bim-ui_bg-contrast-20, rgba(0, 0, 0, 0.05));
+  border-radius: 0.25rem;
+}
+
+.webifc-viewer-container bim-toolbar-section {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}

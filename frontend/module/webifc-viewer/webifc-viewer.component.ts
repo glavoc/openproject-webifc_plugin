@@ -5,6 +5,7 @@ import { WebIfcViewerService } from './webifc-viewer.service';
 @Component({
   selector: 'op-web-ifc-viewer',
   templateUrl: './webifc-viewer.component.html',
+  styleUrls: ['./webifc-viewer.component.css'],
 })
 export class WebIfcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
 
