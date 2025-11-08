@@ -1,0 +1,143 @@
+<div class="webifc-viewer-container">
+  <div class="toolbar">
+    <h2><%= l(:label_webifc_viewer) %></h2>
+    <div class="toolbar-buttons">
+      <input type="file" id="ifc-file-input" accept=".ifc" style="display: none;" />
+      <button id="upload-btn" class="button"><%= l(:button_upload) %></button>
+      <button id="load-btn" class="button" style="margin-left: 10px;"><%= l(:button_load_file) %></button>
+    </div>
+  </div>
+
+  <div id="webifc-viewer" style="width: 100%; height: 600px; border: 1px solid #ddd; margin-top: 20px;"></div>
+
+  <div class="ifc-files-list" style="margin-top: 20px;">
+    <h3><%= l(:label_ifc_files) %></h3>
+    <div id="files-list">
+      <% if @attachments.any? %>
+        <ul>
+          <% @attachments.each do |attachment| %>
+            <li>
+              <a href="#" class="load-ifc-file" data-url="<%= url_for(controller: '/openproject_webifc_plugin/webifc_viewer', action: 'download', id: attachment.id, project_id: @project.identifier) %>">
+                <%= attachment.filename %>
+              </a>
+              (<%= number_to_human_size(attachment.filesize) %>, <%= l(:label_uploaded_by) %> <%= attachment.author&.name %>, <%= time_ago_in_words(attachment.created_at) %> <%= l(:label_ago) %>)
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p><%= l(:label_no_ifc_files) %></p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initWebifcViewer, loadIfcFile } from '<%= asset_path('openproject_webifc_plugin/viewer.js') %>';
+
+  let viewer;
+  const projectId = '<%= @project.identifier %>';
+  const uploadUrl = '<%= url_for(controller: '/openproject_webifc_plugin/webifc_viewer', action: 'upload', project_id: @project.identifier) %>';
+  const listUrl = '<%= url_for(controller: '/openproject_webifc_plugin/webifc_viewer', action: 'list', project_id: @project.identifier) %>';
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    const container = document.getElementById('webifc-viewer');
+    viewer = await initWebifcViewer(container);
+
+    // Upload button
+    document.getElementById('upload-btn').addEventListener('click', () => {
+      document.getElementById('ifc-file-input').click();
+    });
+
+    // File input change
+    document.getElementById('ifc-file-input').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+          const response = await fetch(uploadUrl, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+            }
+          });
+
+          const result = await response.json();
+          if (result.success) {
+            alert('File uploaded successfully!');
+            location.reload(); // Reload to show new file in list
+          } else {
+            alert('Upload failed: ' + result.errors.join(', '));
+          }
+        } catch (error) {
+          console.error('Upload error:', error);
+          alert('Upload failed: ' + error.message);
+        }
+      }
+    });
+
+    // Load button
+    document.getElementById('load-btn').addEventListener('click', async () => {
+      const response = await fetch(listUrl);
+      const files = await response.json();
+      
+      if (files.length > 0) {
+        // Show file selection dialog
+        const fileUrl = files[0].url; // For simplicity, load the first file
+        await loadIfcFile(viewer, fileUrl);
+      } else {
+        alert('No IFC files available');
+      }
+    });
+
+    // Load file from list
+    document.querySelectorAll('.load-ifc-file').forEach(link => {
+      link.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const url = e.target.dataset.url;
+        await loadIfcFile(viewer, url);
+      });
+    });
+  });
+</script>
+
+<style>
+  .webifc-viewer-container {
+    padding: 20px;
+  }
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .toolbar-buttons {
+    display: flex;
+    gap: 10px;
+  }
+
+  #webifc-viewer {
+    background-color: #f5f5f5;
+  }
+
+  .ifc-files-list ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .ifc-files-list li {
+    padding: 8px;
+    margin: 4px 0;
+    background: #f9f9f9;
+    border-left: 3px solid #0099cc;
+  }
+
+  .load-ifc-file {
+    font-weight: bold;
+    cursor: pointer;
+  }
+</style>

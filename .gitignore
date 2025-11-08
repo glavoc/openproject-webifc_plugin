@@ -77,3 +77,7 @@ coverage/
 
 vendor/gems/
 vendor/cache/
+
+# Built frontend assets (keep .gitkeep)
+app/assets/javascripts/openproject_webifc_plugin/*
+!app/assets/javascripts/openproject_webifc_plugin/.gitkeep

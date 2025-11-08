@@ -1,0 +1,11 @@
+en:
+  label_webifc_viewer: "WebIFC Viewer"
+  button_upload: "Upload IFC File"
+  button_load_file: "Load File"
+  label_ifc_files: "Available IFC Files"
+  label_no_ifc_files: "No IFC files uploaded yet"
+  label_uploaded_by: "uploaded by"
+  label_ago: "ago"
+  project_module_webifc_viewer: "WebIFC Viewer"
+  permission_view_webifc_viewer: "View WebIFC Viewer"
+  permission_upload_ifc_files: "Upload IFC Files"
